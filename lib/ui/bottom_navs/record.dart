@@ -100,7 +100,9 @@ class _RecordState extends State<Record> {
   startRecording() async {
     // Check permissions before starting
     try {
-      bool hasPermissions = await Permission.microphone.request().isGranted;
+      print(Permission.microphone.isGranted);
+      bool hasPermissions = await Permission.microphone.isGranted &&
+          await Permission.storage.isGranted;
       if (hasPermissions) {
         String path = _fileName.text;
         if (!_fileName.text.contains('/')) {
@@ -118,6 +120,11 @@ class _RecordState extends State<Record> {
             content: new Text("Recording started"),
           ),
         );
+      } else {
+        await [
+          Permission.microphone,
+          Permission.storage,
+        ].request();
       }
     } catch (e) {
       if (e.toString().substring(0, 44) ==
