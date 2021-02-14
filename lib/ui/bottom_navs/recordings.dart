@@ -177,11 +177,24 @@ class _RecordingsState extends State<Recordings> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+backgroundColor: Color(0XFFFFFFFF),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: refresh,
           child: ListView(
-            children: [Text(files.toString()), Text(directory)] + recordings(),
+            children: [Text('Na him be this',style: TextStyle(
+                          fontFamily: 'Circular Std Book',
+                          fontSize: 26,
+                          color: Color(0XFF1F1F1F),
+                        ), ),Text(files.toString(),style: TextStyle(
+                          fontFamily: 'Circular Std Book',
+                          fontSize: 16,
+                          color: Color(0XFF1F1F1F),
+                        ),), Text(directory,style: TextStyle(
+                          fontFamily: 'Circular Std Book',
+                          fontSize: 16,
+                          color: Color(0XFF1F1F1F),
+                        ), )] + recordings(),
           ),
         ),
       ),
