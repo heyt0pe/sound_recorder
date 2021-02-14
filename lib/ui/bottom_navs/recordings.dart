@@ -181,7 +181,7 @@ class _RecordingsState extends State<Recordings> {
         child: RefreshIndicator(
           onRefresh: refresh,
           child: ListView(
-            children: [Text(files.toString())] + recordings(),
+            children: [Text(files.toString()), Text(directory)] + recordings(),
           ),
         ),
       ),
