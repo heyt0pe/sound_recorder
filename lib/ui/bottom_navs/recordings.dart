@@ -25,12 +25,32 @@ class _RecordingsState extends State<Recordings> {
     _listFiles();
   }
 
-  // Make New Function
   void _listFiles() async {
     directory = (await getApplicationDocumentsDirectory()).path;
     setState(() {
       files = Directory("$directory/").listSync();
     });
+  }
+
+  void play(String fileName) async {
+    await audioPlayer.play(
+      fileName,
+      isLocal: true,
+    );
+  }
+
+  void share(String fileName) {
+    Share.shareFiles(
+      [fileName],
+      text: fileName.split('/').last,
+    );
+  }
+
+  void delete(String fileName) {
+    final fileToDelete = Directory(fileName);
+    fileToDelete.deleteSync(recursive: true);
+    _listFiles();
+    recordings();
   }
 
   List<Widget> recordings() {
@@ -41,13 +61,11 @@ class _RecordingsState extends State<Recordings> {
       if (files == []) {
         return allRecordings;
       }
-      print(files[2].toString().split('\''));
       for (var item in files.reversed) {
         String fileName = item.toString().split("'")[1];
         if (item.toString().substring(0, 4) == 'File' &&
             (fileName.substring(fileName.length - 3) == 'm4a' ||
                 fileName.substring(fileName.length - 3) == 'wav')) {
-          print(fileName);
           allRecordings.add(
             Container(
               width: SizeConfig.screenWidth,
@@ -68,7 +86,7 @@ class _RecordingsState extends State<Recordings> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth - 120,
+                      width: SizeConfig.screenWidth - 175,
                       child: Text(
                         fileName.split('/').last,
                         overflow: TextOverflow.ellipsis,
@@ -80,80 +98,34 @@ class _RecordingsState extends State<Recordings> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: 75,
-                      child: PopupMenuButton(
-                        child: new ListTile(
-                          trailing: const Icon(Icons.more_vert),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.play_arrow,
+                          ),
+                          onPressed: () {
+                            play(fileName);
+                          },
                         ),
-                        onSelected: (String selected) async {
-                          if (selected.split('*/*')[0] == 'Play') {
-                            await audioPlayer.play(
-                              selected.split('*/*')[1],
-                              isLocal: true,
-                            );
-                          } else if (selected.split('*/*')[0] == 'Share') {
-                            Share.shareFiles(
-                              [selected.split('*/*')[1]],
-                              text: selected.split('*/*')[1].split('/').last,
-                            );
-                          } else if (selected.split('*/*')[0] == 'Delete') {
-                            final fileToDelete =
-                                Directory(selected.split('*/*')[1]);
-                            fileToDelete.deleteSync(recursive: true);
-                            _listFiles();
-                            recordings();
-                          }
-                        },
-                        itemBuilder: (_) => <PopupMenuItem<String>>[
-                          new PopupMenuItem<String>(
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                  ),
-                                ),
-                                Text('Play'),
-                              ],
-                            ),
-                            value: 'Play*/*$fileName',
+                        IconButton(
+                          icon: Icon(
+                            Icons.share,
                           ),
-                          new PopupMenuItem<String>(
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Icon(
-                                    Icons.share,
-                                  ),
-                                ),
-                                Text('Share'),
-                              ],
-                            ),
-                            value: 'Share*/*$fileName',
+                          onPressed: () {
+                            share(fileName);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete,
                           ),
-                          new PopupMenuItem<String>(
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Icon(
-                                    Icons.delete,
-                                  ),
-                                ),
-                                Text('Delete'),
-                              ],
-                            ),
-                            value: 'Delete*/*$fileName',
-                          ),
-                        ],
-                      ),
-                    ),
+                          onPressed: () {
+                            delete(fileName);
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -177,35 +149,28 @@ class _RecordingsState extends State<Recordings> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-backgroundColor: Color(0XFFFFFFFF),
+      backgroundColor: Color(0XFFFFFFFF),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: refresh,
           child: ListView(
-            children: [Text('Na him be this',style: TextStyle(
-                          fontFamily: 'Circular Std Book',
-                          fontSize: 26,
-                          color: Color(0XFF1F1F1F),
-                        ), ),Text(files.toString(),style: TextStyle(
-                          fontFamily: 'Circular Std Book',
-                          fontSize: 16,
-                          color: Color(0XFF1F1F1F),
-                        ),), Text(directory,style: TextStyle(
-                          fontFamily: 'Circular Std Book',
-                          fontSize: 16,
-                          color: Color(0XFF1F1F1F),
-                        ), )] + recordings(),
+            children: recordings(),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          audioPlayer.stop();
-        },
-        child: Icon(
-          Icons.stop,
-        ),
-      ),
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Colors.deepOrange,
+          onPressed: () {
+            audioPlayer.stop();
+          },
+          label: Row(
+            children: [
+              Text('Stop'),
+              Icon(
+                Icons.stop,
+              )
+            ],
+          )),
     );
   }
 }

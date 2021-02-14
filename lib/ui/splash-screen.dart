@@ -33,7 +33,7 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Color(0XFF004282),
+      backgroundColor: Colors.deepOrange,
       body: Container(
         width: SizeConfig.screenWidth,
         child: Column(

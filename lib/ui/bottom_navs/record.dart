@@ -4,7 +4,6 @@ import 'package:audio_recorder/audio_recorder.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file/local.dart';
-import 'package:file/file.dart';
 import '../../utils/size_config.dart';
 
 /// A stateful widget class to display the [Record] page
@@ -49,7 +48,7 @@ class _RecordState extends State<Record> {
       ),
       borderSide: BorderSide(
         width: 1.5,
-        color: Color(0XFF004282),
+        color: Colors.deepOrange,
       ),
     ),
     errorBorder: OutlineInputBorder(
@@ -100,7 +99,6 @@ class _RecordState extends State<Record> {
   startRecording() async {
     // Check permissions before starting
     try {
-      print(Permission.microphone.isGranted);
       bool hasPermissions = await Permission.microphone.isGranted &&
           await Permission.storage.isGranted;
       if (hasPermissions) {
@@ -109,7 +107,6 @@ class _RecordState extends State<Record> {
           var appDocDirectory = await getApplicationDocumentsDirectory();
           path = appDocDirectory.path + '/' + _fileName.text;
         }
-        print("Start recording: $path");
         await AudioRecorder.start(path: path, audioOutputFormat: outputFormat);
         animationDuration = 700;
         startPulsating();
@@ -142,7 +139,7 @@ class _RecordState extends State<Record> {
   void stopRecording() async {
     var recording = await AudioRecorder.stop();
     timer.cancel();
-    File file = widget.localFileSystem.file(recording.path);
+    widget.localFileSystem.file(recording.path);
     Scaffold.of(context).showSnackBar(
       new SnackBar(
         content: new Text("Recording ended"),
@@ -265,7 +262,7 @@ class _RecordState extends State<Record> {
                         height: buttonSize,
                         decoration: BoxDecoration(
                           color: isRecording
-                              ? Color(0XFF004282)
+                              ? Colors.deepOrange
                               : Color(0XFFAAAAAA),
                           borderRadius: BorderRadius.all(
                             Radius.circular(buttonSize / 2),

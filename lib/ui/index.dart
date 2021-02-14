@@ -27,7 +27,7 @@ class _IndexState extends State<Index> {
       backgroundColor: Color(0XFFFFFFF),
       body: _children[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0XFF004282),
+        backgroundColor: Colors.deepOrange,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
@@ -42,7 +42,7 @@ class _IndexState extends State<Index> {
           fontWeight: FontWeight.bold,
         ),
         selectedItemColor: Color(0XFFFFFFFF),
-        unselectedItemColor: Color(0XFF888888),
+        unselectedItemColor: Color(0XFFCCCCCC),
         onTap: _onTabTapped,
         items: [
           BottomNavigationBarItem(

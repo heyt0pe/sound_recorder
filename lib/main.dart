@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,
-        accentColor: Color(0xFF004E92),
+        accentColor: Colors.deepOrange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: Splash.id,
