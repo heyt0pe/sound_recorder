@@ -11,7 +11,7 @@ packages:
   audio_recorder:
     dependency: "direct main"
     description:
-      path: "audio_recorder-1.0.2"
+      path: audio_recorder
       relative: true
     source: path
     version: "1.0.2"

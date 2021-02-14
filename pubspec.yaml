@@ -34,7 +34,7 @@ dependencies:
   share: ^0.6.5+4
   audioplayers: ^0.17.3
   audio_recorder:
-    path: ./audio_recorder-1.0.2
+    path: ./audio_recorder
 
 dev_dependencies:
   flutter_test:
